@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: mini-bank-app
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mini_bank_db
+    username: mini_bank_user
+    password: password123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health,info,metrics
+  endpoint:
+    prometheus:
+      enabled: true
+    metrics:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
