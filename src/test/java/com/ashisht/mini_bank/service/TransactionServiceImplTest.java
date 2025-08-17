@@ -15,7 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -57,7 +58,7 @@ public class TransactionServiceImplTest {
         Transaction result = transactionService.createTransaction(1L, 1L, new BigDecimal("100.00"));
 
         // Assert
-        assertEquals(new BigDecimal("-100.00"), result.getAmount());
+        assertThat(new BigDecimal("-100.00")).isEqualTo(result.getAmount());
     }
 
     @Test
@@ -81,7 +82,7 @@ public class TransactionServiceImplTest {
         Transaction result = transactionService.createTransaction(1L, 2L, new BigDecimal("100.00"));
 
         // Assert
-        assertEquals(new BigDecimal("100.00"), result.getAmount());
+        assertThat(new BigDecimal("100.00")).isEqualTo(result.getAmount());
     }
 
     @Test
@@ -90,8 +91,8 @@ public class TransactionServiceImplTest {
         when(accountRepo.findById(999L)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-            () -> transactionService.createTransaction(999L, 1L, new BigDecimal("100.00")));
+        assertThatThrownBy(() -> transactionService.createTransaction(999L, 1L, new BigDecimal("100.00")))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -104,7 +105,7 @@ public class TransactionServiceImplTest {
         when(operationTypeRepo.findById(999L)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-            () -> transactionService.createTransaction(1L, 999L, new BigDecimal("100.00")));
+        assertThatThrownBy(() -> transactionService.createTransaction(1L, 999L, new BigDecimal("100.00")))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -51,6 +51,6 @@ class TransactionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Operation type not found"));
+                .andExpect(jsonPath("$.message").value("Operation type not found"));
     }
 }

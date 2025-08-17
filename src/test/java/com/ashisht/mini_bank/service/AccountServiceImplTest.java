@@ -6,18 +6,17 @@ import com.ashisht.mini_bank.repository.AccountRepo;
 import com.ashisht.mini_bank.web.request.AccountDTO;
 import com.ashisht.mini_bank.web.response.AccountResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,7 +39,7 @@ class AccountServiceImplTest {
             mockedMapper.when(() -> AccountMapper.toAccountResponseDTO(savedAccount)).thenReturn(responseDTO);
 
             AccountResponseDTO result = accountService.createAccount(dto);
-            assertEquals(responseDTO, result);
+            assertThat(result).isEqualTo(responseDTO);
         }
     }
 
@@ -54,7 +53,7 @@ class AccountServiceImplTest {
         try (MockedStatic<AccountMapper> mockedMapper = mockStatic(AccountMapper.class)) {
             mockedMapper.when(() -> AccountMapper.toAccountResponseDTO(account)).thenReturn(responseDTO);
             AccountResponseDTO result = accountService.getAccountById(id);
-            assertEquals(responseDTO, result);
+            assertThat(result).isEqualTo(responseDTO);
         }
     }
 
@@ -62,6 +61,7 @@ class AccountServiceImplTest {
     void getAccountById_shouldThrow_whenAccountNotFound() {
         Long id = 2L;
         when(accountRepo.findById(id)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> accountService.getAccountById(id));
+        assertThatThrownBy(() -> accountService.getAccountById(id))
+            .isInstanceOf(EntityNotFoundException.class);
     }
 }
