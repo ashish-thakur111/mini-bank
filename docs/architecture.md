@@ -137,9 +137,8 @@ The mapping from the internal `Transaction` entity to the `TransactionDTO` is ha
 The `POST /accounts` endpoint accepts an `AccountDTO` in the request body for validation purposes. However, only the required parameter (`documentNumber`) is passed to the service layer. The service layer does not depend on DTOs and only receives primitive or required parameters. All DTO validation and mapping are handled in the controller layer.
 
 **Example:**
-
-```json
 POST /accounts
+```json
 {
   "documentNumber": "1234567890"
 }
