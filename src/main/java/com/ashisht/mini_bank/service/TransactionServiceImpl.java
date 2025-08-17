@@ -6,12 +6,16 @@ import com.ashisht.mini_bank.entity.Transaction;
 import com.ashisht.mini_bank.repository.AccountRepo;
 import com.ashisht.mini_bank.repository.OperationTypeRepo;
 import com.ashisht.mini_bank.repository.TransactionRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
+
+/**
+ * Implementation of TransactionService for handling transaction business logic.
+ * <p>
+ * Responsible for creating and managing transactions in the system.
+ */
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -26,7 +30,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction createTransaction(Long accountId, Long operationTypeId, BigDecimal amount) {
+    public Transaction createTransaction(Long accountId, Integer operationTypeId, BigDecimal amount) {
         Account account = accountRepo.findById(accountId).orElseThrow(() -> new IllegalArgumentException("Account not found"));
         OperationType operationType = operationTypeRepo.findById(operationTypeId).orElseThrow(() -> new IllegalArgumentException("Operation type not found"));
         String desc = operationType.getDescription().toUpperCase();
@@ -48,4 +52,3 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 }
-

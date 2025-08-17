@@ -34,3 +34,17 @@ services:
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
     depends_on:
       - prometheus
+
+  mini-bank-app:
+    image: ghcr.io/ashish-thakur111/mini-bank:latest
+    container_name: mini_bank_app_container
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mini_bank_db
+      SPRING_DATASOURCE_USERNAME: mini_bank_user
+      SPRING_DATASOURCE_PASSWORD: password123
+    depends_on:
+      - postgres
+      - prometheus
+      - grafana

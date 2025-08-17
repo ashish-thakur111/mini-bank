@@ -1,18 +1,30 @@
 package com.ashisht.mini_bank.service;
 
-import com.ashisht.mini_bank.web.request.AccountDTO;
-import com.ashisht.mini_bank.web.response.AccountResponseDTO;
+import com.ashisht.mini_bank.entity.Account;
+
+/**
+ * Service interface for account-related business logic.
+ * <p>
+ * Defines contract for creating and retrieving accounts.
+ */
 
 public interface AccountService {
     /**
      * Creates a new account for the given document number.
      *
-     * @param accountDTO The DTO containing the document number for the account to be created.
-     *                   The document number must be unique.
-     *                   If the document number already exists, an exception will be thrown.
-     * @return An AccountResponseDTO containing the details of the created account.
+     * @param documentNumber The document number for the account to be created.
+     *                      The document number must be unique.
+     *                      If the document number already exists, an exception will be thrown.
+     * @return The created Account entity.
      */
-    AccountResponseDTO createAccount(AccountDTO accountDTO);
+    Account createAccount(String documentNumber);
 
-    AccountResponseDTO getAccountById(Long accountId);
+    /**
+     * Retrieves an account by its ID.
+     *
+     * @param accountId The ID of the account to retrieve.
+     *                  If no account is found with the given ID, an exception will be thrown.
+     * @return The Account entity corresponding to the given ID.
+     */
+    Account getAccountById(Long accountId);
 }

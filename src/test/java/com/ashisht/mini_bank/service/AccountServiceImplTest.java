@@ -28,33 +28,27 @@ class AccountServiceImplTest {
 
     @Test
     void createAccount_shouldSaveAndReturnResponse() {
-        AccountDTO dto = AccountDTO.builder().documentNumber("12345678900").build();
         Account account = new Account();
         Account savedAccount = new Account();
-        AccountResponseDTO responseDTO = AccountResponseDTO.builder().id(1L).documentNumber("12345678900").build();
+        savedAccount.setAccountId(1L);
+        savedAccount.setDocumentNumber("12345678900");
 
-        try (MockedStatic<AccountMapper> mockedMapper = mockStatic(AccountMapper.class)) {
-            mockedMapper.when(() -> AccountMapper.toAccountEntity(dto)).thenReturn(account);
-            when(accountRepo.save(account)).thenReturn(savedAccount);
-            mockedMapper.when(() -> AccountMapper.toAccountResponseDTO(savedAccount)).thenReturn(responseDTO);
+        when(accountRepo.save(account)).thenReturn(savedAccount);
 
-            AccountResponseDTO result = accountService.createAccount(dto);
-            assertThat(result).isEqualTo(responseDTO);
-        }
+        Account result = accountService.createAccount("12345678900");
+        assertThat(result).isEqualTo(savedAccount);
     }
 
     @Test
     void getAccountById_shouldReturnResponse_whenAccountExists() {
         Long id = 1L;
         Account account = new Account();
-        AccountResponseDTO responseDTO = AccountResponseDTO.builder().id(1L).documentNumber("12345678900").build();
+        account.setAccountId(1L);
+        account.setDocumentNumber("12345678900");
 
         when(accountRepo.findById(id)).thenReturn(Optional.of(account));
-        try (MockedStatic<AccountMapper> mockedMapper = mockStatic(AccountMapper.class)) {
-            mockedMapper.when(() -> AccountMapper.toAccountResponseDTO(account)).thenReturn(responseDTO);
-            AccountResponseDTO result = accountService.getAccountById(id);
-            assertThat(result).isEqualTo(responseDTO);
-        }
+        Account result = accountService.getAccountById(id);
+        assertThat(result).isEqualTo(account);
     }
 
     @Test

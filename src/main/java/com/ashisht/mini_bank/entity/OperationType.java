@@ -13,7 +13,7 @@ import lombok.Setter;
 public class OperationType {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long operationTypeId;
+    private Integer operationTypeId;
     private String description;
 }
 

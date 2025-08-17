@@ -44,18 +44,18 @@ public class TransactionServiceImplTest {
         account.setAccountId(1L);
 
         OperationType operationType = new OperationType();
-        operationType.setOperationTypeId(1L);
+        operationType.setOperationTypeId(1);
         operationType.setDescription("PURCHASE");
 
         Transaction expectedTransaction = new Transaction();
         expectedTransaction.setAmount(new BigDecimal("-100.00"));
 
         when(accountRepo.findById(1L)).thenReturn(Optional.of(account));
-        when(operationTypeRepo.findById(1L)).thenReturn(Optional.of(operationType));
+        when(operationTypeRepo.findById(1)).thenReturn(Optional.of(operationType));
         when(transactionRepo.save(any(Transaction.class))).thenReturn(expectedTransaction);
 
         // Act
-        Transaction result = transactionService.createTransaction(1L, 1L, new BigDecimal("100.00"));
+        Transaction result = transactionService.createTransaction(1L, 1, new BigDecimal("100.00"));
 
         // Assert
         assertThat(new BigDecimal("-100.00")).isEqualTo(result.getAmount());
@@ -68,18 +68,18 @@ public class TransactionServiceImplTest {
         account.setAccountId(1L);
 
         OperationType operationType = new OperationType();
-        operationType.setOperationTypeId(2L);
+        operationType.setOperationTypeId(2);
         operationType.setDescription("PAYMENT");
 
         Transaction expectedTransaction = new Transaction();
         expectedTransaction.setAmount(new BigDecimal("100.00"));
 
         when(accountRepo.findById(1L)).thenReturn(Optional.of(account));
-        when(operationTypeRepo.findById(2L)).thenReturn(Optional.of(operationType));
+        when(operationTypeRepo.findById(2)).thenReturn(Optional.of(operationType));
         when(transactionRepo.save(any(Transaction.class))).thenReturn(expectedTransaction);
 
         // Act
-        Transaction result = transactionService.createTransaction(1L, 2L, new BigDecimal("100.00"));
+        Transaction result = transactionService.createTransaction(1L, 2, new BigDecimal("100.00"));
 
         // Assert
         assertThat(new BigDecimal("100.00")).isEqualTo(result.getAmount());
@@ -91,7 +91,7 @@ public class TransactionServiceImplTest {
         when(accountRepo.findById(999L)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThatThrownBy(() -> transactionService.createTransaction(999L, 1L, new BigDecimal("100.00")))
+        assertThatThrownBy(() -> transactionService.createTransaction(999L, 1, new BigDecimal("100.00")))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -102,10 +102,10 @@ public class TransactionServiceImplTest {
         account.setAccountId(1L);
 
         when(accountRepo.findById(1L)).thenReturn(Optional.of(account));
-        when(operationTypeRepo.findById(999L)).thenReturn(Optional.empty());
+        when(operationTypeRepo.findById(999)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThatThrownBy(() -> transactionService.createTransaction(1L, 999L, new BigDecimal("100.00")))
+        assertThatThrownBy(() -> transactionService.createTransaction(1L, 999, new BigDecimal("100.00")))
             .isInstanceOf(IllegalArgumentException.class);
     }
 }

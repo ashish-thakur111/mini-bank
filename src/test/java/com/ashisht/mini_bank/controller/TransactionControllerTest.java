@@ -30,7 +30,7 @@ class TransactionControllerTest {
     void createTransaction_success() throws Exception {
         Transaction transaction = new Transaction();
         transaction.setTransactionId(1L);
-        when(transactionService.createTransaction(anyLong(), anyLong(), any(BigDecimal.class))).thenReturn(transaction);
+        when(transactionService.createTransaction(anyLong(), anyInt(), any(BigDecimal.class))).thenReturn(transaction);
 
         String requestBody = "{\"accountId\":1,\"operationTypeId\":1,\"amount\":100.0}";
         mockMvc.perform(post("/transactions")
@@ -43,7 +43,7 @@ class TransactionControllerTest {
     @Test
     @DisplayName("POST /transactions - invalid input")
     void createTransaction_invalidInput() throws Exception {
-        when(transactionService.createTransaction(anyLong(), eq(999L), any(BigDecimal.class)))
+        when(transactionService.createTransaction(anyLong(), eq(999), any(BigDecimal.class)))
                 .thenThrow(new IllegalArgumentException("Operation type not found"));
 
         String requestBody = "{\"accountId\":1,\"operationTypeId\":999,\"amount\":100.0}";

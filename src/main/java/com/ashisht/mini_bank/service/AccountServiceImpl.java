@@ -1,13 +1,15 @@
 package com.ashisht.mini_bank.service;
 
 import com.ashisht.mini_bank.entity.Account;
-import com.ashisht.mini_bank.mapper.AccountMapper;
 import com.ashisht.mini_bank.repository.AccountRepo;
-import com.ashisht.mini_bank.web.request.AccountDTO;
-import com.ashisht.mini_bank.web.response.AccountResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of AccountService for handling account business logic.
+ * <p>
+ * Responsible for creating and retrieving accounts in the system.
+ */
 @Service
 public class AccountServiceImpl implements AccountService {
     private final AccountRepo accountRepo;
@@ -17,24 +19,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountResponseDTO createAccount(AccountDTO accountDTO) {
-        // Create a new account entity
-        Account account = AccountMapper.toAccountEntity(accountDTO);
-
-        // Save the account to the repository
-        Account savedAccount = accountRepo.save(account);
-
-        // Convert the saved account to a response DTO
-        return AccountMapper.toAccountResponseDTO(savedAccount);
+    public Account createAccount(String documentNumber) {
+        Account account = new Account();
+        account.setDocumentNumber(documentNumber);
+        return accountRepo.save(account);
     }
 
     @Override
-    public AccountResponseDTO getAccountById(Long accountId) {
+    public Account getAccountById(Long accountId) {
         // Fetch the account by ID from the repository
-        Account account = accountRepo.findById(accountId)
+        return accountRepo.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + accountId));
-
-        // Convert the account to a response DTO
-        return AccountMapper.toAccountResponseDTO(account);
     }
 }

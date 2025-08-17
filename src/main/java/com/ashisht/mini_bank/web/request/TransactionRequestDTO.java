@@ -7,6 +7,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.DecimalMin;
 
+/**
+ * Data Transfer Object (DTO) for transaction creation requests.
+ * <p>
+ * Encapsulates the data required to create a new transaction via the API.
+ * </p>
+ */
 @Getter
 @Setter
 public class TransactionRequestDTO {
@@ -16,7 +22,7 @@ public class TransactionRequestDTO {
 
     @NotNull(message = "operationTypeId is required")
     @Positive(message = "operationTypeId must be positive")
-    private Long operationTypeId;
+    private Integer operationTypeId;
 
     @NotNull(message = "amount is required")
     @DecimalMin(value = "0.01", message = "amount must be greater than 0")
