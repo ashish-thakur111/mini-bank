@@ -1,16 +1,12 @@
 package com.ashisht.mini_bank.service;
 
 import com.ashisht.mini_bank.entity.Account;
-import com.ashisht.mini_bank.mapper.AccountMapper;
 import com.ashisht.mini_bank.repository.AccountRepo;
-import com.ashisht.mini_bank.web.request.AccountDTO;
-import com.ashisht.mini_bank.web.response.AccountResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -28,12 +24,11 @@ class AccountServiceImplTest {
 
     @Test
     void createAccount_shouldSaveAndReturnResponse() {
-        Account account = new Account();
         Account savedAccount = new Account();
         savedAccount.setAccountId(1L);
         savedAccount.setDocumentNumber("12345678900");
 
-        when(accountRepo.save(account)).thenReturn(savedAccount);
+        when(accountRepo.save(any(Account.class))).thenReturn(savedAccount);
 
         Account result = accountService.createAccount("12345678900");
         assertThat(result).isEqualTo(savedAccount);

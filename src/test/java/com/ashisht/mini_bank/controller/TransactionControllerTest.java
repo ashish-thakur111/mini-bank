@@ -1,5 +1,7 @@
 package com.ashisht.mini_bank.controller;
 
+import com.ashisht.mini_bank.entity.Account;
+import com.ashisht.mini_bank.entity.OperationType;
 import com.ashisht.mini_bank.entity.Transaction;
 import com.ashisht.mini_bank.service.TransactionService;
 import org.junit.jupiter.api.DisplayName;
@@ -30,14 +32,16 @@ class TransactionControllerTest {
     void createTransaction_success() throws Exception {
         Transaction transaction = new Transaction();
         transaction.setTransactionId(1L);
+        transaction.setAccount(Account.builder().accountId(1L).build());
+        transaction.setOperationType(OperationType.builder().operationTypeId(1).description("CASH PURCHASE").build());
         when(transactionService.createTransaction(anyLong(), anyInt(), any(BigDecimal.class))).thenReturn(transaction);
 
         String requestBody = "{\"accountId\":1,\"operationTypeId\":1,\"amount\":100.0}";
         mockMvc.perform(post("/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.transactionId").value(1L));
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.transactionId").value(1L));
     }
 
     @Test
