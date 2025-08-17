@@ -2,7 +2,6 @@ package com.ashisht.mini_bank.config;
 
 import com.ashisht.mini_bank.entity.OperationType;
 import com.ashisht.mini_bank.repository.OperationTypeRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;

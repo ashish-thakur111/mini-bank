@@ -11,6 +11,9 @@ spring:
       ddl-auto: update
     show-sql: true
 
+springdoc:
+  show-actuator: true
+
 management:
   endpoints:
     web:

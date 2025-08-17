@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Service
@@ -43,7 +44,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setAccount(account);
         transaction.setOperationType(operationType);
         transaction.setAmount(amount);
-        transaction.setEventDate(LocalDateTime.now());
+        transaction.setEventDate(Instant.now());
         return transaction;
     }
 }

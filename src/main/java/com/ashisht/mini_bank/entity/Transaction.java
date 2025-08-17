@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -23,6 +24,6 @@ public class Transaction extends Auditable {
     private OperationType operationType;
 
     private BigDecimal amount;
-    private LocalDateTime eventDate;
+    private Instant eventDate;
 }
 

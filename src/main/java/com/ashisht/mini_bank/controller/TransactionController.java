@@ -24,15 +24,11 @@ public class TransactionController {
 
     @PostMapping
     public ResponseEntity<?> createTransaction(@RequestBody @Valid TransactionRequestDTO request) {
-        try {
-            Transaction transaction = transactionService.createTransaction(
-                request.getAccountId(),
-                request.getOperationTypeId(),
-                request.getAmount()
-            );
-            return ResponseEntity.ok(transaction);
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+        Transaction transaction = transactionService.createTransaction(
+            request.getAccountId(),
+            request.getOperationTypeId(),
+            request.getAmount()
+        );
+        return ResponseEntity.ok(transaction);
     }
 }
