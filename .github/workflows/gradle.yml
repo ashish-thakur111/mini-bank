@@ -1,4 +1,4 @@
-name: CI/CD Gradle Build & Push
+name: CI/CD Gradle Build, Generate docs & Push Image
 
 on:
   push:
@@ -60,6 +60,15 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Generate Javadoc
+        run: ./gradlew javadoc
+
+      - name: Upload Javadoc artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: javadoc
+          path: build/docs/javadoc
 
       - name: Build Docker image with bootBuildImage
         run: ./gradlew bootBuildImage --imageName=ghcr.io/${{ github.repository }}:latest
