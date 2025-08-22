@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -24,6 +23,7 @@ public class Transaction extends Auditable {
     private OperationType operationType;
 
     private BigDecimal amount;
+    private BigDecimal balance;
     private Instant eventDate;
 }
 

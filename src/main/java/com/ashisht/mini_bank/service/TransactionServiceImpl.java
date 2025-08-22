@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of TransactionService for handling transaction business logic.
@@ -22,11 +24,13 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepo transactionRepo;
     private final AccountRepo accountRepo;
     private final OperationTypeRepo operationTypeRepo;
+    private final PaymentDischargeService paymentDischargeService;
 
-    public TransactionServiceImpl(TransactionRepo transactionRepo, AccountRepo accountRepo, OperationTypeRepo operationTypeRepo) {
+    public TransactionServiceImpl(TransactionRepo transactionRepo, AccountRepo accountRepo, OperationTypeRepo operationTypeRepo, PaymentDischargeService paymentDischargeService) {
         this.transactionRepo = transactionRepo;
         this.accountRepo = accountRepo;
         this.operationTypeRepo = operationTypeRepo;
+        this.paymentDischargeService = paymentDischargeService;
     }
 
     @Override
@@ -34,7 +38,16 @@ public class TransactionServiceImpl implements TransactionService {
         Account account = accountRepo.findById(accountId).orElseThrow(() -> new IllegalArgumentException("Account not found"));
         OperationType operationType = operationTypeRepo.findById(operationTypeId).orElseThrow(() -> new IllegalArgumentException("Operation type not found"));
         String desc = operationType.getDescription().toUpperCase();
+        List<Transaction> allTransactionByAccount = transactionRepo.getAllTransactionByAccount(accountId);
         Transaction transaction = getTransaction(amount, desc, account, operationType);
+        if (allTransactionByAccount != null) {
+            allTransactionByAccount.add(transaction);
+        } else {
+            allTransactionByAccount = new ArrayList<>();
+            allTransactionByAccount.add(transaction);
+        }
+        double bal = paymentDischargeService.calculateBalance(allTransactionByAccount);
+        transaction.setBalance(BigDecimal.valueOf(bal));
         return transactionRepo.save(transaction);
     }
 
