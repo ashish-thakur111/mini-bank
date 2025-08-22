@@ -1,7 +1,6 @@
 package com.ashisht.mini_bank.service;
 
 import com.ashisht.mini_bank.entity.Transaction;
-import java.math.BigDecimal;
 
 /**
  * Service interface for transaction-related business logic.
@@ -18,5 +17,5 @@ public interface TransactionService {
      * @param amount           The amount involved in the transaction.
      * @return The created Transaction entity.
      */
-    Transaction createTransaction(Long accountId, Integer operationTypeId, BigDecimal amount);
+    Transaction createTransaction(Long accountId, Integer operationTypeId, Double amount);
 }

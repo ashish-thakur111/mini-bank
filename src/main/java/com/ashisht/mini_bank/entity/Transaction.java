@@ -22,8 +22,8 @@ public class Transaction extends Auditable {
     @JoinColumn(name = "operation_type_id")
     private OperationType operationType;
 
-    private BigDecimal amount;
-    private BigDecimal balance;
+    private Double amount;
+    private Double balance;
     private Instant eventDate;
 }
 

@@ -17,6 +17,6 @@ public class TransactionDTO {
     private Long transactionId;
     private Long accountId;
     private Integer operationTypeId;
-    private BigDecimal amount;
+    private Double amount;
     private String message;
 }

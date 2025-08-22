@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface PaymentDischargeService {
 
-    public double calculateBalance(List<Transaction> transactionList);
+    public List<Transaction> calculateBalance(List<Transaction> transactionList, Integer operationId);
 }

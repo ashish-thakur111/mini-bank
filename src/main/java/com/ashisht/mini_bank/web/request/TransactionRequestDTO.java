@@ -26,5 +26,5 @@ public class TransactionRequestDTO {
 
     @NotNull(message = "amount is required")
     @DecimalMin(value = "0.01", message = "amount must be greater than 0")
-    private BigDecimal amount;
+    private Double amount;
 }

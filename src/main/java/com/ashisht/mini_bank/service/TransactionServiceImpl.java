@@ -34,7 +34,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction createTransaction(Long accountId, Integer operationTypeId, BigDecimal amount) {
+    public Transaction createTransaction(Long accountId, Integer operationTypeId, Double amount) {
         Account account = accountRepo.findById(accountId).orElseThrow(() -> new IllegalArgumentException("Account not found"));
         OperationType operationType = operationTypeRepo.findById(operationTypeId).orElseThrow(() -> new IllegalArgumentException("Operation type not found"));
         String desc = operationType.getDescription().toUpperCase();
@@ -46,16 +46,16 @@ public class TransactionServiceImpl implements TransactionService {
             allTransactionByAccount = new ArrayList<>();
             allTransactionByAccount.add(transaction);
         }
-        double bal = paymentDischargeService.calculateBalance(allTransactionByAccount);
-        transaction.setBalance(BigDecimal.valueOf(bal));
-        return transactionRepo.save(transaction);
+        List<Transaction> transactions = paymentDischargeService.calculateBalance(allTransactionByAccount, operationTypeId);
+        transactionRepo.saveAllAndFlush(transactions);
+        return transaction;
     }
 
-    private static Transaction getTransaction(BigDecimal amount, String desc, Account account, OperationType operationType) {
+    private static Transaction getTransaction(Double amount, String desc, Account account, OperationType operationType) {
         if (desc.contains("PURCHASE") || desc.contains("WITHDRAWAL")) {
-            amount = amount.abs().negate();
+            amount = -Math.abs(amount);
         } else if (desc.contains("PAYMENT")) {
-            amount = amount.abs();
+            amount = Math.abs(amount);
         }
         Transaction transaction = new Transaction();
         transaction.setAccount(account);

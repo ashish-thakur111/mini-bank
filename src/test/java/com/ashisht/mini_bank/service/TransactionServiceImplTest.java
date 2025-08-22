@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,12 +28,14 @@ public class TransactionServiceImplTest {
     private AccountRepo accountRepo;
     @Mock
     private OperationTypeRepo operationTypeRepo;
+    @Mock
+    private PaymentDischargeService paymentDischargeService;
 
     private TransactionServiceImpl transactionService;
 
     @BeforeEach
     void setUp() {
-        transactionService = new TransactionServiceImpl(transactionRepo, accountRepo, operationTypeRepo);
+        transactionService = new TransactionServiceImpl(transactionRepo, accountRepo, operationTypeRepo, paymentDischargeService);
     }
 
     @Test
@@ -48,17 +49,20 @@ public class TransactionServiceImplTest {
         operationType.setDescription("PURCHASE");
 
         Transaction expectedTransaction = new Transaction();
-        expectedTransaction.setAmount(new BigDecimal("-100.00"));
+        expectedTransaction.setAmount(-100.00);
 
         when(accountRepo.findById(1L)).thenReturn(Optional.of(account));
         when(operationTypeRepo.findById(1)).thenReturn(Optional.of(operationType));
-        when(transactionRepo.save(any(Transaction.class))).thenReturn(expectedTransaction);
+        when(transactionRepo.getAllTransactionByAccount(1L)).thenReturn(new java.util.ArrayList<>());
+        when(transactionRepo.saveAllAndFlush(any())).thenReturn(null);
 
         // Act
-        Transaction result = transactionService.createTransaction(1L, 1, new BigDecimal("100.00"));
+        Transaction result = transactionService.createTransaction(1L, 1, -100.00);
 
         // Assert
-        assertThat(new BigDecimal("-100.00")).isEqualTo(result.getAmount());
+        assertThat(result.getAmount())
+            .as("Amount should be negative for PURCHASE operation")
+            .isEqualTo(-100.00);
     }
 
     @Test
@@ -72,17 +76,20 @@ public class TransactionServiceImplTest {
         operationType.setDescription("PAYMENT");
 
         Transaction expectedTransaction = new Transaction();
-        expectedTransaction.setAmount(new BigDecimal("100.00"));
+        expectedTransaction.setAmount(100.00);
 
         when(accountRepo.findById(1L)).thenReturn(Optional.of(account));
         when(operationTypeRepo.findById(2)).thenReturn(Optional.of(operationType));
-        when(transactionRepo.save(any(Transaction.class))).thenReturn(expectedTransaction);
+        when(transactionRepo.getAllTransactionByAccount(1L)).thenReturn(new java.util.ArrayList<>());
+        when(transactionRepo.saveAllAndFlush(any())).thenReturn(null);
 
         // Act
-        Transaction result = transactionService.createTransaction(1L, 2, new BigDecimal("100.00"));
+        Transaction result = transactionService.createTransaction(1L, 2, 100.00);
 
         // Assert
-        assertThat(new BigDecimal("100.00")).isEqualTo(result.getAmount());
+        assertThat(result.getAmount())
+            .as("Amount should be positive for PAYMENT operation")
+            .isEqualTo(100.00);
     }
 
     @Test
@@ -91,7 +98,8 @@ public class TransactionServiceImplTest {
         when(accountRepo.findById(999L)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThatThrownBy(() -> transactionService.createTransaction(999L, 1, new BigDecimal("100.00")))
+        assertThatThrownBy(() -> transactionService.createTransaction(999L, 1, 100.00))
+            .as("Should throw IllegalArgumentException for invalid account")
             .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -105,7 +113,8 @@ public class TransactionServiceImplTest {
         when(operationTypeRepo.findById(999)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThatThrownBy(() -> transactionService.createTransaction(1L, 999, new BigDecimal("100.00")))
+        assertThatThrownBy(() -> transactionService.createTransaction(1L, 999, 100.00))
+            .as("Should throw IllegalArgumentException for invalid operation type")
             .isInstanceOf(IllegalArgumentException.class);
     }
 }
